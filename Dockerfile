@@ -1,37 +1,16 @@
-# ---- BUILD STAGE ----
 ARG APP_PATH=/opt/outline
-FROM node:20-slim AS build
+ARG BASE_IMAGE=outlinewiki/outline-base
+FROM ${BASE_IMAGE} AS base
 
-# Set working directory inside the container
 ARG APP_PATH
 WORKDIR $APP_PATH
 
-# Install system dependencies needed to build native modules
-RUN apt-get update && apt-get install -y \
-  python3 \
-  make \
-  g++ \
-  && rm -rf /var/lib/apt/lists/*
-
-# Copy dependency manifests
-COPY package.json yarn.lock ./
-
-# Install dependencies
-RUN yarn install --frozen-lockfile
-
-# Copy the rest of the repo (your forked Outline code, including public/index.html)
-COPY . .
-
-# Build Outline (creates ./build, ./public, ./server, etc.)
-RUN yarn build
-
-
-# ---- RUNTIME STAGE ----
+# Use a Node version compatible with Outline (>=18 <=20)
 FROM node:20-slim AS runner
 
 LABEL org.opencontainers.image.source="https://github.com/outline/outline"
 
-ARG APP_PATH=/opt/outline
+ARG APP_PATH
 WORKDIR $APP_PATH
 ENV NODE_ENV=production
 
@@ -41,20 +20,19 @@ RUN addgroup --gid 1001 nodejs && \
     mkdir -p /var/lib/outline && \
     chown -R nodejs:nodejs /var/lib/outline
 
-# Copy built app from the build stage
-COPY --from=build --chown=nodejs:nodejs $APP_PATH/build ./build
-COPY --from=build $APP_PATH/server ./server
-COPY --from=build $APP_PATH/public ./public
-COPY --from=build $APP_PATH/.sequelizerc ./.sequelizerc
-COPY --from=build $APP_PATH/node_modules ./node_modules
-COPY --from=build $APP_PATH/package.json ./package.json
+COPY --from=base --chown=nodejs:nodejs $APP_PATH/build ./build
+COPY --from=base $APP_PATH/server ./server
+COPY --from=base $APP_PATH/public ./public
+COPY public/index.html ./public/index.html
+COPY --from=base $APP_PATH/.sequelizerc ./.sequelizerc
+COPY --from=base $APP_PATH/node_modules ./node_modules
+COPY --from=base $APP_PATH/package.json ./package.json
 
 # Install wget to healthcheck the server
-RUN apt-get update \
+RUN  apt-get update \
     && apt-get install -y wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Local file storage dir (if you're not using S3)
 ENV FILE_STORAGE_LOCAL_ROOT_DIR=/var/lib/outline/data
 RUN mkdir -p "$FILE_STORAGE_LOCAL_ROOT_DIR" && \
     chown -R nodejs:nodejs "$FILE_STORAGE_LOCAL_ROOT_DIR" && \
