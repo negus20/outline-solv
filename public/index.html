@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{lang}">
 
 <head>
@@ -15,7 +15,6 @@
     <meta property="og:title" content="{title}" />
     <meta property="og:description" content="{description}" />
     <meta property="og:url" content="{canonical-url}" />
-    <!-- reuse same image as favicon or set your own absolute URL -->
     <meta property="og:image" content="{shortcut-icon-url}" />
 
     <!-- ✅ Twitter -->
@@ -32,14 +31,75 @@
     <link rel="shortcut icon" type="image/png" href="{shortcut-icon-url}" sizes="32x32" />
     <link rel="apple-touch-icon" type="image/png" href="{cdn-url}/images/apple-touch-icon.png" sizes="192x192" />
     <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Outline" />
+    <style>
+        @font-face {
+            font-family: "Inter";
+            font-display: swap;
+            font-feature-settings: "ss03", "cv05";
+            src: url("{cdn-url}/fonts/Inter.var.woff2") format("woff2");
+        }
 
-    <!-- your existing styles here -->
+        @font-face {
+            font-family: "Inter";
+            font-display: swap;
+            font-feature-settings: "ss03", "cv05";
+            font-style: italic;
+            src: url("{cdn-url}/fonts/Inter-italic.var.woff2") format("woff2");
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media print {
+            body {
+                display: block;
+            }
+        }
+
+        #root {
+            flex: 1;
+            min-height: 100%;
+            width: 100%;
+        }
+
+        .screenreader-only {
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="root"></div>
     {env}
-    <!-- your existing scripts here -->
+    <script nonce="{csp-nonce}">
+        if (
+            window.localStorage &&
+            window.localStorage.getItem("theme") === "dark"
+        ) {
+            var color = "#111319";
+            document.querySelector("#root").style.background = color;
+            document
+                .querySelector('meta[name="theme-color"]')
+                .setAttribute("content", color);
+        }
+    </script>
+    {script-tags}
+    <div class="screenreader-only">{content}</div>
 </body>
 
 </html>
