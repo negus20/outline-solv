@@ -22,11 +22,11 @@ RUN addgroup --gid 1001 nodejs && \
 
 COPY --from=base --chown=nodejs:nodejs $APP_PATH/build ./build
 COPY --from=base $APP_PATH/server ./server
+COPY server/static/index.html ./server/static/index.html
 COPY --from=base $APP_PATH/public ./public
 COPY --from=base $APP_PATH/.sequelizerc ./.sequelizerc
 COPY --from=base $APP_PATH/node_modules ./node_modules
 COPY --from=base $APP_PATH/package.json ./package.json
-COPY server/static/index.html ./server/static/index.html
 
 # Install wget to healthcheck the server
 RUN  apt-get update \
