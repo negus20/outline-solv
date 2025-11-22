@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="{lang}">
+
+<head>
+    <title>{title}</title>
+    <meta name="theme-color" content="#FFF" />
+    <meta name="slack-app-id" content="{slack-app-id}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="description" content="{description}" />
+
+    <!-- ✅ Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{title}" />
+    <meta property="og:description" content="{description}" />
+    <meta property="og:url" content="{canonical-url}" />
+    <!-- reuse same image as favicon or set your own absolute URL -->
+    <meta property="og:image" content="{shortcut-icon-url}" />
+
+    <!-- ✅ Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{title}" />
+    <meta name="twitter:description" content="{description}" />
+    <meta name="twitter:image" content="{shortcut-icon-url}" />
+
+    <meta name="darkreader-lock" />
+    {noindex}
+    <link rel="manifest" href="{manifest-url}" />
+    <link rel="canonical" href="{canonical-url}" data-react-helmet="true" />
+    {prefetch}
+    <link rel="shortcut icon" type="image/png" href="{shortcut-icon-url}" sizes="32x32" />
+    <link rel="apple-touch-icon" type="image/png" href="{cdn-url}/images/apple-touch-icon.png" sizes="192x192" />
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Outline" />
+
+    <!-- your existing styles here -->
+</head>
+
+<body>
+    <div id="root"></div>
+    {env}
+    <!-- your existing scripts here -->
+</body>
+
+</html>
