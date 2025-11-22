@@ -5,8 +5,8 @@ FROM ${BASE_IMAGE} AS base
 ARG APP_PATH
 WORKDIR $APP_PATH
 
-# ---
-FROM node:22.21.0-slim AS runner
+# Use a Node version compatible with Outline (>=18 <=20)
+FROM node:20-slim AS runner
 
 LABEL org.opencontainers.image.source="https://github.com/outline/outline"
 
